@@ -8,7 +8,7 @@ function doCallculateCell (num: number) {
             friends += 1
         }
     }
-    if (num <= 4798) {
+    if (num <= wx * wy - 2) {
         if (list[num + 1].z == 1) {
             friends += 1
         }
@@ -18,7 +18,7 @@ function doCallculateCell (num: number) {
             friends += 1
         }
     }
-    if (num <= 4799 - wx) {
+    if (num <= wx * wy - 1 - wx) {
         if (list[num + wx].z == 1) {
             friends += 1
         }
@@ -33,12 +33,12 @@ function doCallculateCell (num: number) {
             friends += 1
         }
     }
-    if (num <= 4799 - (wx - 1)) {
+    if (num <= wx * wy - 1 - (wx - 1)) {
         if (list[num + (wx - 1)].z == 1) {
             friends += 1
         }
     }
-    if (num <= 4799 - (wx + 1)) {
+    if (num <= wx * wy - 1 - (wx + 1)) {
         if (list[num + (wx + 1)].z == 1) {
             friends += 1
         }
@@ -46,27 +46,58 @@ function doCallculateCell (num: number) {
     return friends
 }
 function doLive () {
-    for (let index = 0; index <= 4799; index++) {
+    for (let index = 0; index <= wx * wy - 1; index++) {
         howmany = doCallculateCell(index)
         if (list[index].z == 0 && howmany == 3) {
             list[index].z = 2
-        } else if (howmany != 2 && howmany != 3) {
+            list[index].setImage(img`
+                b b 
+                b b 
+                `)
+        } else if (list[index].z == 1 && howmany != 2 && howmany != 3) {
             list[index].z = 3
+            list[index].setImage(img`
+                2 2 
+                2 2 
+                `)
+        } else if (list[index].z == 1 && (howmany == 2 || howmany == 3)) {
+            list[index].setImage(img`
+                9 9 
+                9 9 
+                `)
+        } else if (list[index].z == 0 && howmany != 3) {
+            list[index].setImage(img`
+                f f 
+                f f 
+                `)
         }
     }
-    for (let index = 0; index <= 4799; index++) {
-        if (list[index].z == 2) {
-            list[index].z = 1
-            list[index].setImage(img`
+    pause(1000)
+    for (let index2 = 0; index2 <= wx * wy - 1; index2++) {
+        if (list[index2].z == 2) {
+            list[index2].z = 1
+            list[index2].setImage(img`
                 7 7 
                 7 7 
                 `)
-        } else if (list[index].z == 3) {
-            list[index].z = 0
-            list[index].setImage(img`
+        } else if (list[index2].z == 3) {
+            list[index2].z = 0
+            list[index2].setImage(img`
                 d d 
                 d d 
                 `)
+        } else if (list[index2].z == 0) {
+            list[index2].setImage(img`
+                d d 
+                d d 
+                `)
+        } else if (list[index2].z == 1) {
+            list[index2].setImage(img`
+                7 7 
+                7 7 
+                `)
+        } else {
+        	
         }
     }
 }
@@ -74,14 +105,15 @@ let howmany = 0
 let friends = 0
 let mySprite: Sprite = null
 let wx = 0
+let wy = 0
 let list: Sprite[] = []
 list = []
 let dx = 2
 let dy = 2
-let wy = 80
-wx = 60
+wy = 4
+wx = 4
 info.setScore(0)
-for (let index = 0; index <= 4799; index++) {
+for (let index3 = 0; index3 <= wx * wy - 1; index3++) {
     if (Math.percentChance(50)) {
         mySprite = sprites.create(img`
             7 7 
@@ -95,10 +127,10 @@ for (let index = 0; index <= 4799; index++) {
             `, SpriteKind.Bacteria)
         mySprite.z = 0
     }
-    mySprite.setPosition((index - wy * Math.floor(index / wy)) * dx, dy * Math.floor(index / wy))
-    list.insertAt(index, mySprite)
+    mySprite.setPosition((index3 - wy * Math.floor(index3 / wy)) * dx, dy * Math.floor(index3 / wy))
+    list.insertAt(index3, mySprite)
 }
-game.onUpdate(function () {
+forever(function () {
     doLive()
     info.changeScoreBy(1)
 })
