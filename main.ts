@@ -3,12 +3,12 @@ namespace SpriteKind {
 }
 function doCallculateCell (num: number) {
     friends = 0
-    if (num >= 1) {
+    if (num % wx > 0) {
         if (list[num - 1].z == 1) {
             friends += 1
         }
     }
-    if (num <= wx * wy - 2) {
+    if (num % wx < wx - 1) {
         if (list[num + 1].z == 1) {
             friends += 1
         }
@@ -23,22 +23,22 @@ function doCallculateCell (num: number) {
             friends += 1
         }
     }
-    if (num >= wx + 1) {
+    if (num % wx > 0 && num >= wx) {
         if (list[num - (wx + 1)].z == 1) {
             friends += 1
         }
     }
-    if (num >= wx - 1) {
+    if (num % wx < wx - 1 && num >= wx) {
         if (list[num - (wx - 1)].z == 1) {
             friends += 1
         }
     }
-    if (num <= wx * wy - 1 - (wx - 1)) {
+    if (num <= wx * wy - 1 - (wx - 1) && num % wx > 0) {
         if (list[num + (wx - 1)].z == 1) {
             friends += 1
         }
     }
-    if (num <= wx * wy - 1 - (wx + 1)) {
+    if (num <= wx * wy - 1 - (wx + 1) && num % wx < wx - 1) {
         if (list[num + (wx + 1)].z == 1) {
             friends += 1
         }
@@ -110,8 +110,8 @@ let list: Sprite[] = []
 list = []
 let dx = 2
 let dy = 2
-wy = 4
-wx = 4
+wy = 20
+wx = 20
 info.setScore(0)
 for (let index3 = 0; index3 <= wx * wy - 1; index3++) {
     if (Math.percentChance(50)) {
