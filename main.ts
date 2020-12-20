@@ -1,6 +1,55 @@
 namespace SpriteKind {
     export const Bacteria = SpriteKind.create()
 }
+function doGenerateSprites () {
+    if (blockSettings.exists("tablica") && (blockSettings.readNumber("wx") == wx && blockSettings.readNumber("wy") == wy)) {
+        game.splash("jest juz zapisana")
+        dozapisu = blockSettings.readNumberArray("tablica")
+        game.splash("odczytane:", convertToText(dozapisu.length))
+        for (let index3 = 0; index3 <= wx * wy - 1; index3++) {
+            if (dozapisu[index3] == 1) {
+                mySprite = sprites.create(img`
+                    7 7 
+                    7 7 
+                    `, SpriteKind.Bacteria)
+                mySprite.z = 1
+            } else {
+                mySprite = sprites.create(img`
+                    f f 
+                    f f 
+                    `, SpriteKind.Bacteria)
+                mySprite.z = 0
+            }
+            mySprite.setPosition(index3 % wx * dx + px, dy * Math.floor(index3 / wx) + py)
+            list.insertAt(index3, mySprite)
+        }
+    } else {
+        for (let index3 = 0; index3 <= wx * wy - 1; index3++) {
+            if (Math.percentChance(16)) {
+                mySprite = sprites.create(img`
+                    7 7 
+                    7 7 
+                    `, SpriteKind.Bacteria)
+                mySprite.z = 1
+            } else {
+                mySprite = sprites.create(img`
+                    f f 
+                    f f 
+                    `, SpriteKind.Bacteria)
+                mySprite.z = 0
+            }
+            mySprite.setPosition(index3 % wx * dx + px, dy * Math.floor(index3 / wx) + py)
+            list.insertAt(index3, mySprite)
+        }
+        dozapisu = []
+        for (let index3 = 0; index3 <= wx * wy - 1; index3++) {
+            dozapisu.insertAt(index3, list[index3].z)
+        }
+        blockSettings.writeNumberArray("tablica", dozapisu)
+        blockSettings.writeNumber("wx", wx)
+        blockSettings.writeNumber("wy", wy)
+    }
+}
 function doCheckSprite (num: number) {
     if (num >= 0 && num <= wx * wy - 1) {
         if (list[num].z == 1 || list[num].z == 3) {
@@ -57,6 +106,10 @@ function doCallculateCell (num: number) {
     }
     return friends
 }
+controller.B.onEvent(ControllerButtonEvent.Repeated, function () {
+    game.splash("regenerating")
+    doRegenerateSprites(randint(16, 59))
+})
 function doGenerateAligator () {
     list[45].setImage(img`
         7 7 
@@ -153,6 +206,28 @@ function doGenerateAligator () {
 function doGenerate1 () {
     doGenerateAligator()
 }
+function doRegenerateSprites (percchance: number) {
+    dozapisu = []
+    for (let index3 = 0; index3 <= wx * wy - 1; index3++) {
+        if (Math.percentChance(percchance)) {
+            list[index3].setImage(img`
+                7 7 
+                7 7 
+                `)
+            list[index3].z = 1
+        } else {
+            list[index3].setImage(img`
+                f f 
+                f f 
+                `)
+            list[index3].z = 0
+        }
+        dozapisu.insertAt(index3, list[index3].z)
+    }
+    blockSettings.writeNumberArray("tablica", dozapisu)
+    blockSettings.writeNumber("wx", wx)
+    blockSettings.writeNumber("wy", wy)
+}
 function doGenerateFrog () {
     list[45].setImage(img`
         7 7 
@@ -186,6 +261,7 @@ function doGenerateFrog () {
     list[106].z = 1
 }
 function doLive () {
+    zmiany = 0
     for (let index = 0; index <= wx * wy - 1; index++) {
         howmany = doCallculateCell(index)
         z = list[index].z
@@ -207,12 +283,10 @@ function doLive () {
         // `)
         if (z == 0 && howmany == 3) {
             list[index].z = 2
+            zmiany += 1
         } else if (z == 1 && howmany != 2 && howmany != 3) {
             list[index].z = 3
-        } else if (z == 1 && (howmany == 2 || howmany == 3)) {
-        	
-        } else if (z == 0 && howmany != 3) {
-        	
+            zmiany += 1
         }
     }
     for (let index2 = 0; index2 <= wx * wy - 1; index2++) {
@@ -243,39 +317,32 @@ function doLive () {
         	
         }
     }
+    if (zmiany == 0) {
+        game.splash("Stable")
+    }
 }
 let z = 0
 let howmany = 0
+let zmiany = 0
 let friends = 0
 let mySprite: Sprite = null
+let dozapisu: number[] = []
 let wx = 0
 let wy = 0
+let dy = 0
+let dx = 0
+let py = 0
+let px = 0
 let list: Sprite[] = []
 list = []
-let px = 1
-let py = 1
-let dx = 2
-let dy = 2
-wy = 15
+px = 1
+py = 1
+dx = 2
+dy = 2
+wy = 40
 wx = 33
 info.setScore(0)
-for (let index3 = 0; index3 <= wx * wy - 1; index3++) {
-    if (Math.percentChance(16)) {
-        mySprite = sprites.create(img`
-            7 7 
-            7 7 
-            `, SpriteKind.Bacteria)
-        mySprite.z = 1
-    } else {
-        mySprite = sprites.create(img`
-            f f 
-            f f 
-            `, SpriteKind.Bacteria)
-        mySprite.z = 0
-    }
-    mySprite.setPosition(index3 % wx * dx + px, dy * Math.floor(index3 / wx) + py)
-    list.insertAt(index3, mySprite)
-}
+doGenerateSprites()
 forever(function () {
     doLive()
     info.changeScoreBy(1)
