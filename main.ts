@@ -3,7 +3,6 @@ namespace SpriteKind {
 }
 function doGenerateSprites () {
     if (blockSettings.exists("tablica") && (blockSettings.readNumber("wx") == wx && blockSettings.readNumber("wy") == wy)) {
-        game.splash("jest juz zapisana")
         dozapisu = blockSettings.readNumberArray("tablica")
         game.splash("odczytane:", convertToText(dozapisu.length))
         for (let index3 = 0; index3 <= wx * wy - 1; index3++) {
@@ -303,18 +302,6 @@ function doLive () {
                 f f 
                 f f 
                 `)
-        } else if (z == 0) {
-            list[index2].setImage(img`
-                f f 
-                f f 
-                `)
-        } else if (z == 1) {
-            list[index2].setImage(img`
-                7 7 
-                7 7 
-                `)
-        } else {
-        	
         }
     }
     if (zmiany == 0) {
@@ -339,8 +326,8 @@ px = 1
 py = 1
 dx = 2
 dy = 2
-wy = 40
-wx = 33
+wy = 20
+wx = 20
 info.setScore(0)
 doGenerateSprites()
 forever(function () {
