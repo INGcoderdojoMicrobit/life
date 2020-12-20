@@ -226,13 +226,13 @@ function doLive () {
         } else if (z == 3) {
             list[index2].z = 0
             list[index2].setImage(img`
-                d d 
-                d d 
+                f f 
+                f f 
                 `)
         } else if (z == 0) {
             list[index2].setImage(img`
-                d d 
-                d d 
+                f f 
+                f f 
                 `)
         } else if (z == 1) {
             list[index2].setImage(img`
@@ -252,10 +252,12 @@ let wx = 0
 let wy = 0
 let list: Sprite[] = []
 list = []
+let px = 1
+let py = 1
 let dx = 2
 let dy = 2
-wy = 80
-wx = 60
+wy = 15
+wx = 33
 info.setScore(0)
 for (let index3 = 0; index3 <= wx * wy - 1; index3++) {
     if (Math.percentChance(16)) {
@@ -266,12 +268,12 @@ for (let index3 = 0; index3 <= wx * wy - 1; index3++) {
         mySprite.z = 1
     } else {
         mySprite = sprites.create(img`
-            d d 
-            d d 
+            f f 
+            f f 
             `, SpriteKind.Bacteria)
         mySprite.z = 0
     }
-    mySprite.setPosition((index3 - wy * Math.floor(index3 / wy)) * dx, dy * Math.floor(index3 / wy))
+    mySprite.setPosition(index3 % wx * dx + px, dy * Math.floor(index3 / wx) + py)
     list.insertAt(index3, mySprite)
 }
 forever(function () {
