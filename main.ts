@@ -326,8 +326,8 @@ px = 1
 py = 1
 dx = 2
 dy = 2
-wy = 20
-wx = 20
+wy = 60
+wx = 80
 info.setScore(0)
 doGenerateSprites()
 forever(function () {
