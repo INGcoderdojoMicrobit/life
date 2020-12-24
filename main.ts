@@ -4,7 +4,7 @@ namespace SpriteKind {
 function doGenerateSprites () {
     if (blockSettings.exists("tablica") && (blockSettings.readNumber("wx") == wx && blockSettings.readNumber("wy") == wy)) {
         dozapisu = blockSettings.readNumberArray("tablica")
-        game.splash("odczytane:", convertToText(dozapisu.length))
+        //game.splash("odczytane:", convertToText(dozapisu.length))
         for (let index3 = 0; index3 <= wx * wy - 1; index3++) {
             if (dozapisu[index3] == 1) {
                 mySprite = sprites.create(img`
@@ -23,26 +23,19 @@ function doGenerateSprites () {
             list.insertAt(index3, mySprite)
         }
     } else {
-        for (let index3 = 0; index3 <= wx * wy - 1; index3++) {
-            if (Math.percentChance(16)) {
-                mySprite = sprites.create(img`
-                    7 7 
-                    7 7 
-                    `, SpriteKind.Bacteria)
-                mySprite.z = 1
-            } else {
-                mySprite = sprites.create(img`
-                    f f 
-                    f f 
-                    `, SpriteKind.Bacteria)
-                mySprite.z = 0
-            }
-            mySprite.setPosition(index3 % wx * dx + px, dy * Math.floor(index3 / wx) + py)
-            list.insertAt(index3, mySprite)
+        for (let index32 = 0; index32 <= wx * wy - 1; index32++) {
+            mySprite = sprites.create(img`
+                f f 
+                f f 
+                `, SpriteKind.Bacteria)
+            mySprite.z = 0
+            mySprite.setPosition(index32 % wx * dx + px, dy * Math.floor(index32 / wx) + py)
+            list.insertAt(index32, mySprite)
         }
+        doRegenerateSprites(-1)
         dozapisu = []
-        for (let index3 = 0; index3 <= wx * wy - 1; index3++) {
-            dozapisu.insertAt(index3, list[index3].z)
+        for (let index33 = 0; index33 <= wx * wy - 1; index33++) {
+            dozapisu.insertAt(index33, list[index33].z)
         }
         blockSettings.writeNumberArray("tablica", dozapisu)
         blockSettings.writeNumber("wx", wx)
@@ -106,9 +99,20 @@ function doCallculateCell (num: number) {
     return friends
 }
 controller.B.onEvent(ControllerButtonEvent.Repeated, function () {
-    game.splash("regenerating")
-    doRegenerateSprites(randint(16, 59))
+    //game.splash("regenerating")
+    if (false) {
+        doRegenerateSprites(randint(16, 59))
+    } else {
+        doRegenerateSprites(-1)
+    }
 })
+function doAddPlot (num: number) {
+    list[num].setImage(img`
+        7 7 
+        7 7 
+        `)
+    list[num].z = 1
+}
 function doGenerateAligator () {
     list[45].setImage(img`
         7 7 
@@ -207,21 +211,33 @@ function doGenerate1 () {
 }
 function doRegenerateSprites (percchance: number) {
     dozapisu = []
-    for (let index3 = 0; index3 <= wx * wy - 1; index3++) {
-        if (Math.percentChance(percchance)) {
-            list[index3].setImage(img`
-                7 7 
-                7 7 
-                `)
-            list[index3].z = 1
-        } else {
-            list[index3].setImage(img`
+    if (percchance < 0) {
+        for (let index34 = 0; index34 <= wx * wy - 1; index34++) {
+            list[index34].setImage(img`
                 f f 
                 f f 
                 `)
-            list[index3].z = 0
+            list[index34].z = 0
         }
-        dozapisu.insertAt(index3, list[index3].z)
+        doGenerateTree()
+    }
+    for (let index35 = 0; index35 <= wx * wy - 1; index35++) {
+        if (percchance >= 0) {
+            if (Math.percentChance(percchance)) {
+                list[index35].setImage(img`
+                    7 7 
+                    7 7 
+                    `)
+                list[index35].z = 1
+            } else {
+                list[index35].setImage(img`
+                    f f 
+                    f f 
+                    `)
+                list[index35].z = 0
+            }
+        }
+        dozapisu.insertAt(index35, list[index35].z)
     }
     blockSettings.writeNumberArray("tablica", dozapisu)
     blockSettings.writeNumber("wx", wx)
@@ -305,9 +321,174 @@ function doLive () {
         }
     }
     if (zmiany == 0) {
-        game.splash("Stable")
+        game.splash("Merry Christmas :-)")
     }
 }
+function doGenerateTree () {
+    drzewko = [
+    15,
+    44,
+    45,
+    46,
+    73,
+    74,
+    75,
+    76,
+    77,
+    102,
+    103,
+    104,
+    105,
+    106,
+    107,
+    108,
+    135,
+    164,
+    165,
+    166,
+    192,
+    193,
+    194,
+    195,
+    196,
+    197,
+    198,
+    220,
+    221,
+    222,
+    223,
+    224,
+    225,
+    226,
+    227,
+    228,
+    229,
+    230,
+    249,
+    250,
+    251,
+    252,
+    253,
+    254,
+    255,
+    256,
+    257,
+    258,
+    259,
+    260,
+    261,
+    285,
+    314,
+    315,
+    316,
+    342,
+    343,
+    344,
+    345,
+    346,
+    347,
+    348,
+    370,
+    371,
+    372,
+    373,
+    374,
+    375,
+    376,
+    377,
+    378,
+    379,
+    380,
+    399,
+    400,
+    401,
+    402,
+    403,
+    404,
+    405,
+    406,
+    407,
+    408,
+    409,
+    410,
+    411,
+    428,
+    429,
+    430,
+    431,
+    432,
+    433,
+    434,
+    435,
+    436,
+    437,
+    438,
+    439,
+    440,
+    441,
+    442,
+    456,
+    457,
+    458,
+    459,
+    460,
+    461,
+    462,
+    463,
+    464,
+    465,
+    466,
+    467,
+    468,
+    469,
+    470,
+    471,
+    472,
+    473,
+    474,
+    494,
+    495,
+    496,
+    524,
+    525,
+    526
+    ]
+    for (let index36 = 0; index36 <= wx * wy - 1; index36++) {
+        if (index36 % wx < 5 || index36 % wx > 25) {
+            if (Math.percentChance(5)) {
+                list[index36].setImage(img`
+                    7 7 
+                    7 7 
+                    `)
+                list[index36].z = 1
+            } else {
+                list[index36].setImage(img`
+                    f f 
+                    f f 
+                    `)
+                list[index36].z = 0
+            }
+        }
+    }
+    for (let value of drzewko) {
+        doAddPlot(value)
+    }
+    game.splash("Nacisnij A")
+    music.setTempo(60)
+    for (let index = 0; index < 2; index++) {
+        music.playTone(392, music.beat(BeatFraction.Whole))
+        music.playTone(440, music.beat(BeatFraction.Half))
+        music.playTone(392, music.beat(BeatFraction.Half))
+        music.playTone(330, music.beat(BeatFraction.Whole))
+    }
+    music.playTone(587, music.beat(BeatFraction.Half))
+    music.playTone(587, music.beat(BeatFraction.Half))
+    music.playTone(494, music.beat(BeatFraction.Whole))
+    music.playTone(523, music.beat(BeatFraction.Half))
+    music.playTone(523, music.beat(BeatFraction.Half))
+    music.playTone(392, music.beat(BeatFraction.Half))
+}
+let drzewko: number[] = []
 let z = 0
 let howmany = 0
 let zmiany = 0
@@ -326,8 +507,8 @@ px = 1
 py = 1
 dx = 2
 dy = 2
-wy = 60
-wx = 80
+wy = 20
+wx = 30
 info.setScore(0)
 doGenerateSprites()
 forever(function () {
