@@ -4,7 +4,7 @@ namespace SpriteKind {
 function doGenerateSprites () {
     if (blockSettings.exists("tablica") && (blockSettings.readNumber("wx") == wx && blockSettings.readNumber("wy") == wy)) {
         dozapisu = blockSettings.readNumberArray("tablica")
-        //game.splash("odczytane:", convertToText(dozapisu.length))
+        // game.splash("odczytane:", convertToText(dozapisu.length))
         for (let index3 = 0; index3 <= wx * wy - 1; index3++) {
             if (dozapisu[index3] == 1) {
                 mySprite = sprites.create(img`
@@ -32,7 +32,8 @@ function doGenerateSprites () {
             mySprite.setPosition(index32 % wx * dx + px, dy * Math.floor(index32 / wx) + py)
             list.insertAt(index32, mySprite)
         }
-        doRegenerateSprites(-1)
+        // if -1 as parameter - function generates Tree :-)
+        doRegenerateSprites(20)
         dozapisu = []
         for (let index33 = 0; index33 <= wx * wy - 1; index33++) {
             dozapisu.insertAt(index33, list[index33].z)
@@ -99,8 +100,9 @@ function doCallculateCell (num: number) {
     return friends
 }
 controller.B.onEvent(ControllerButtonEvent.Repeated, function () {
-    //game.splash("regenerating")
-    if (false) {
+    // game.splash("regenerating")
+    // if false - regenerates Tree :-)
+    if (true) {
         doRegenerateSprites(randint(16, 59))
     } else {
         doRegenerateSprites(-1)
@@ -320,9 +322,10 @@ function doLive () {
                 `)
         }
     }
-    if (zmiany == 0) {
-        game.splash("Merry Christmas :-)")
+    /*if (zmiany == 0) {
+        game.splash("Stable :-)")
     }
+    */
 }
 function doGenerateTree () {
     drzewko = [
